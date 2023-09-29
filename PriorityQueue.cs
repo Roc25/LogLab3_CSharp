@@ -44,6 +44,7 @@ namespace LogLab3_CSharp {
         }
 
         public void Reset() {
+            _pos = -1;
             _node = _startnode;
         }
     }
@@ -52,7 +53,10 @@ namespace LogLab3_CSharp {
         public PriorityNode? Start { get; set; }
         public PriorityNode? End { get; set; }
         public int Length { get; private set; } = 0;
-        public IEnumerator GetEnumerator() => new PriorityQueueEnumerator( Start, Length );
+        public IEnumerator GetEnumerator() {
+            if (Start == null) throw new InvalidOperationException();
+            return new PriorityQueueEnumerator( Start, Length );
+        }
 
         public PriorityQueue( PriorityNode start ) {
             start.Queue = this;
@@ -95,6 +99,8 @@ namespace LogLab3_CSharp {
             Length += 1;
         }
 
+
+
         public bool Contains(PriorityNode node) {
             foreach (PriorityNode item in this) {
                 if (item == node) return true;
@@ -127,6 +133,7 @@ namespace LogLab3_CSharp {
         public void Remove(PriorityNode node) {
             node.FindPreviouse().Next = node.Next;
             node.Queue = null;
+            Length -= 1;
         }
 
         public void PrioritySort() {
